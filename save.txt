@@ -1,5 +1,5 @@
 --- !ruby/object:Save
 code: !ruby/object:HiddenWord
-  word: bristle
-  coded_word: ______e
-guesses: 5
+  word: jeopardise
+  coded_word: _e__a___se
+guesses: 4
