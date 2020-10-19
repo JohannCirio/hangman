@@ -121,7 +121,6 @@ class Hangman
   end
 
   def start_game
-    binding.pry
     until @remaining_guesses.zero?
       update_hanged_man
       game_ui
