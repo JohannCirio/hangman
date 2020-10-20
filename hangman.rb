@@ -1,4 +1,3 @@
-require 'pry'
 require 'yaml'
 
 module FileManager
@@ -179,7 +178,7 @@ class Hangman
 
   def print_wrong_guesses
     print "Wrong guesses:  "
-    @wrong_guesses.each {|guess| print "[#{guess}]"} unless @wrong_guesses.empty?
+    @wrong_guesses.each {|guess| print "#{guess} "} unless @wrong_guesses.empty?
     print "\n\n"
   end
 

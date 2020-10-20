@@ -1,0 +1,14 @@
+--- !ruby/object:Save
+code: !ruby/object:HiddenWord
+  word: search
+  coded_word: _____h
+guesses: 5
+wrong_guesses:
+- w
+hanged_man: !ruby/object:HangedMan
+  head: '0'
+  left_arm: " "
+  right_arm: " "
+  torso: " "
+  left_leg: " "
+  right_leg: " "
