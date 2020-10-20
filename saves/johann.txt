@@ -1,0 +1,16 @@
+--- !ruby/object:Save
+code: !ruby/object:HiddenWord
+  word: nonslip
+  coded_word: _o__l__
+guesses: 3
+wrong_guesses:
+- a
+- e
+- m
+hanged_man: !ruby/object:HangedMan
+  head: '0'
+  left_arm: "/"
+  right_arm: " "
+  torso: "|"
+  left_leg: " "
+  right_leg: " "

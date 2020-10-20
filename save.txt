@@ -1,5 +1,0 @@
---- !ruby/object:Save
-code: !ruby/object:HiddenWord
-  word: jeopardise
-  coded_word: _e__a___se
-guesses: 4

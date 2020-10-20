@@ -2,17 +2,23 @@ require 'pry'
 require 'yaml'
 
 module FileManager
-
   def create_save_directory
     Dir.mkdir('saves') if !Dir.exist?('saves')
   end
 
-  def save_game_to_file(save)
-    File.open('save.txt', "w") { |f| f.write(YAML.dump(save)) }
+  def save_game_to_file(save, save_name)
+    File.open("saves/#{save_name}.txt", "w") { |f| f.write(YAML.dump(save)) }
   end
 
-  def load_game_from_file
-    YAML.load(File.read("save.txt"))
+  def load_game_from_file(file_name)
+    YAML.load(File.read(file_name))
+  end
+
+  def list_files(directory)
+    formated_files = []
+    all_files = Dir.glob("#{directory}/*")
+    all_files.each { |file| formated_files.push(file.delete_prefix('saves/').delete_suffix('.txt')) }
+    return formated_files
   end
 end
 
@@ -36,10 +42,12 @@ module TerminalControl
 end
 
 class Save
-  attr_accessor :code, :guesses
-  def initialize(code, guesses)
+  attr_accessor :code, :guesses, :wrong_guesses, :hanged_man
+  def initialize(code, guesses, wrong_guesses, hanged_man)
     @code = code
     @guesses = guesses
+    @wrong_guesses = wrong_guesses
+    @hanged_man = hanged_man
   end
 end
 
@@ -176,10 +184,35 @@ class Hangman
   end
 
   def loader
-    game = load_game_from_file
-    @hidden_world = game.code
-    @remaining_guesses = game.guesses
+    system('clear')
+    save_files_list = list_files('saves')
+    print_files_list(save_files_list)
+    save_file_name = select_save_file(save_files_list)
+    save_file_name = 'saves/' + save_file_name + '.txt'
+    load_game(load_game_from_file(save_file_name))
     start_game
+  end
+
+  def load_game(save)
+    @hidden_world = save.code
+    @remaining_guesses = save.guesses
+    @wrong_guesses = save.wrong_guesses
+    @hanged_man = save.hanged_man
+  end
+
+  def print_files_list (file_names)
+    puts "Available save files:\n\n"
+    file_names.each { |file| puts file }
+  end
+
+  def select_save_file (available_files)
+    puts "\nType the name of the file you want to load and press enter!"
+    valid_file = false
+    until valid_file == true
+      load_file = gets.chomp
+      available_files.any? { |file| file == load_file } ? valid_file = true : clean_lines(1)
+    end
+    return load_file
   end
 
   def win?
@@ -250,10 +283,26 @@ class Hangman
   end
 
   def save_game
-    save_data = Save.new(@hidden_world, @remaining_guesses)
-    save_game_to_file(save_data)
+    system("clear")
+    save_data = Save.new(@hidden_world, @remaining_guesses, @wrong_guesses, @hanged_man)
+    save_name = get_valid_save_name
+    save_game_to_file(save_data, save_name)
     puts 'Game saved! Bye!'
     exit(true)
+  end
+
+  def get_valid_save_name
+    puts 'Type a name for your save file and press enter! (please use only letters, numbers and underscore)'
+    valid_name = false
+    until valid_name == true
+      name = gets.chomp.downcase
+      if (name =~ /\W/).nil? && name.length < 25
+        valid_name = true
+      else
+        clean_lines(1)
+      end
+    end
+    return name
   end
 end
 
